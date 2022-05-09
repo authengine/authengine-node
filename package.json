@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc",
+    "build": "rm -r ./dist && tsc",
     "test": "jest"
   },
   "dependencies": {
