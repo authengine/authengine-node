@@ -1,9 +1,19 @@
 import { ClientConfig, CreateUserData, CreateMagicLinkData, ValidateMagicLinkAttemptData } from "./types";
-declare class AuthClient {
+declare class SessionClient {
     private config;
     constructor(config: ClientConfig);
-    createMagicLink(data: CreateMagicLinkData): any;
-    validateMagicLinkAttempt(data: ValidateMagicLinkAttemptData): Promise<any>;
+    getById(data: {
+        id: string;
+    }): any;
+    validateToken(data: {
+        token: string;
+    }): any;
+}
+declare class MagicLinkClient {
+    private config;
+    constructor(config: ClientConfig);
+    create(data: CreateMagicLinkData): any;
+    validate(data: ValidateMagicLinkAttemptData): Promise<any>;
 }
 declare class UserClient {
     private config;
@@ -15,8 +25,9 @@ export declare class Client {
     config: ClientConfig;
     constructor(config: ClientConfig);
     private apiRequest;
-    get auth(): AuthClient;
+    get magicLink(): MagicLinkClient;
     get user(): UserClient;
+    get session(): SessionClient;
     whoami(): Promise<any>;
 }
 export {};

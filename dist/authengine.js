@@ -5,18 +5,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = void 0;
 var axios_1 = __importDefault(require("axios"));
-var AuthClient = /** @class */ (function () {
-    function AuthClient(config) {
+var SessionClient = /** @class */ (function () {
+    function SessionClient(config) {
         this.config = config;
     }
-    AuthClient.prototype.createMagicLink = function (data) {
+    SessionClient.prototype.getById = function (data) {
+        return this.config.apiRequest({
+            method: "GET",
+            url: "/sessions/".concat(data.id),
+        });
+    };
+    SessionClient.prototype.validateToken = function (data) {
+        return this.config.apiRequest({
+            method: "POST",
+            url: "/management/sessions/validate-token",
+            data: data,
+        });
+    };
+    return SessionClient;
+}());
+var MagicLinkClient = /** @class */ (function () {
+    function MagicLinkClient(config) {
+        this.config = config;
+    }
+    MagicLinkClient.prototype.create = function (data) {
         return this.config.apiRequest({
             method: "POST",
             url: "/public/auth/magic-link",
             data: data,
         });
     };
-    AuthClient.prototype.validateMagicLinkAttempt = function (data) {
+    MagicLinkClient.prototype.validate = function (data) {
         return this.config.apiRequest({
             method: "GET",
             url: "/public/auth/magic-link/".concat(data.requestId, "/validate"),
@@ -25,7 +44,7 @@ var AuthClient = /** @class */ (function () {
             },
         });
     };
-    return AuthClient;
+    return MagicLinkClient;
 }());
 var UserClient = /** @class */ (function () {
     function UserClient(config) {
@@ -63,9 +82,9 @@ var Client = /** @class */ (function () {
     Client.prototype.apiRequest = function (config) {
         return axios_1.default.request(config);
     };
-    Object.defineProperty(Client.prototype, "auth", {
+    Object.defineProperty(Client.prototype, "magicLink", {
         get: function () {
-            return new AuthClient(this.config);
+            return new MagicLinkClient(this.config);
         },
         enumerable: false,
         configurable: true
@@ -73,6 +92,13 @@ var Client = /** @class */ (function () {
     Object.defineProperty(Client.prototype, "user", {
         get: function () {
             return new UserClient(this.config);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Client.prototype, "session", {
+        get: function () {
+            return new SessionClient(this.config);
         },
         enumerable: false,
         configurable: true
