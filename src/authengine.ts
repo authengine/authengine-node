@@ -7,13 +7,35 @@ import {
   ValidateMagicLinkAttemptData,
 } from "./types";
 
-class AuthClient {
+class SessionClient {
   private config: ClientConfig;
   constructor(config: ClientConfig) {
     this.config = config;
   }
 
-  createMagicLink(data: CreateMagicLinkData) {
+  public getById(data: { id: string }) {
+    return this.config.apiRequest({
+      method: "GET",
+      url: `/sessions/${data.id}`,
+    });
+  }
+
+  public validateToken(data: { token: string }) {
+    return this.config.apiRequest({
+      method: "POST",
+      url: `/management/sessions/validate-token`,
+      data,
+    });
+  }
+}
+
+class MagicLinkClient {
+  private config: ClientConfig;
+  constructor(config: ClientConfig) {
+    this.config = config;
+  }
+
+  public create(data: CreateMagicLinkData) {
     return this.config.apiRequest({
       method: "POST",
       url: "/public/auth/magic-link",
@@ -21,7 +43,7 @@ class AuthClient {
     });
   }
 
-  validateMagicLinkAttempt(data: ValidateMagicLinkAttemptData): Promise<any> {
+  public validate(data: ValidateMagicLinkAttemptData): Promise<any> {
     return this.config.apiRequest({
       method: "GET",
       url: `/public/auth/magic-link/${data.requestId}/validate`,
@@ -38,14 +60,14 @@ class UserClient {
     this.config = config;
   }
 
-  getById(id: string): Promise<any> {
+  public getById(id: string): Promise<any> {
     return this.config.apiRequest({
       method: "GET",
       url: `/management/user/${id}`,
     });
   }
 
-  create(data: CreateUserData): Promise<any> {
+  public create(data: CreateUserData): Promise<any> {
     return this.config.apiRequest({
       method: "POST",
       url: `/management/user`,
@@ -77,12 +99,16 @@ export class Client {
     return axios.request(config);
   }
 
-  get auth() {
-    return new AuthClient(this.config);
+  get magicLink() {
+    return new MagicLinkClient(this.config);
   }
 
   get user() {
     return new UserClient(this.config);
+  }
+
+  get session() {
+    return new SessionClient(this.config);
   }
 
   whoami(): Promise<any> {
