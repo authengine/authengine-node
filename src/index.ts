@@ -1,6 +1,7 @@
-import { Client } from "./authengine";
+import { Client } from "./client";
+import utils from "./utils";
 
-const authengine = {
-  Client: Client,
+export default {
+  Client,
+  utils,
 };
-export default authengine;

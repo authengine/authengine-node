@@ -6,3 +6,4 @@ src/
 # don't include tool config files
 .prettierrc
 tsconfig.json
+jest.config.js

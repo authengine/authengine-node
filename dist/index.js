@@ -1,7 +1,11 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var authengine_1 = require("./authengine");
-var authengine = {
-    Client: authengine_1.Client,
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.default = authengine;
+Object.defineProperty(exports, "__esModule", { value: true });
+const client_1 = require("./client");
+const utils_1 = __importDefault(require("./utils"));
+exports.default = {
+    Client: client_1.Client,
+    utils: utils_1.default,
+};
